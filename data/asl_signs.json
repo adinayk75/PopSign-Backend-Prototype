@@ -1,0 +1,58 @@
+[
+  {
+    "word": "rock",
+    "sense": "stone",
+    "description": "A rock or stone object.",
+    "video_key": "asl/rock/stone.mp4",
+    "tags": ["stone", "ground", "mountain", "pebble", "cliff", "nature"],
+    "default": true
+  },
+  {
+    "word": "rock",
+    "sense": "music",
+    "description": "Rock as a genre of music.",
+    "video_key": "asl/rock/music.mp4",
+    "tags": ["music", "song", "band", "concert", "guitar", "listen", "genre"],
+    "default": false
+  },
+  {
+    "word": "rock",
+    "sense": "rock_on",
+    "description": "The expression 'rock on'.",
+    "video_key": "asl/rock/rock_on.mp4",
+    "tags": ["rock on", "awesome", "celebrate", "concert", "cheer"],
+    "default": false
+  },
+  {
+    "word": "bat",
+    "sense": "animal",
+    "description": "A flying nocturnal mammal.",
+    "video_key": "asl/bat/animal.mp4",
+    "tags": ["animal", "cave", "night", "fly", "wings", "mammal"],
+    "default": true
+  },
+  {
+    "word": "bat",
+    "sense": "baseball",
+    "description": "A baseball bat used to hit a ball.",
+    "video_key": "asl/bat/baseball.mp4",
+    "tags": ["baseball", "sport", "ball", "hit", "swing", "game"],
+    "default": false
+  },
+  {
+    "word": "bank",
+    "sense": "financial",
+    "description": "A financial institution.",
+    "video_key": "asl/bank/financial.mp4",
+    "tags": ["money", "account", "deposit", "cash", "loan", "finance"],
+    "default": true
+  },
+  {
+    "word": "bank",
+    "sense": "river",
+    "description": "The land alongside a river.",
+    "video_key": "asl/bank/river.mp4",
+    "tags": ["river", "water", "shore", "stream", "fishing", "nature"],
+    "default": false
+  }
+]
