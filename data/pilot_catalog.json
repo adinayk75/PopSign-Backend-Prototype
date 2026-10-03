@@ -1,0 +1,96 @@
+{
+  "schema_version": 1,
+  "review_notice": "This public repository uses synthetic demo examples and placeholder video keys. Import approved private mappings separately before production use.",
+  "senses": [
+    {
+      "word": "about",
+      "video_key": "demo/about/approximate.mp4",
+      "sense_label": "approximately or around",
+      "definition": "Expresses an estimate or an approximate time or amount.",
+      "is_default": false,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "about-approx-01", "text": "About ten children came to the party.", "source_type": "synthetic_demo"},
+        {"id": "about-approx-02", "text": "We arrived at about noon.", "source_type": "synthetic_demo"},
+        {"id": "about-approx-03", "text": "It takes about five minutes.", "source_type": "synthetic_demo"},
+        {"id": "about-approx-04", "text": "About twenty people joined the game.", "source_type": "synthetic_demo"}
+      ]
+    },
+    {
+      "word": "about",
+      "video_key": "demo/about/topic.mp4",
+      "sense_label": "concerning a topic",
+      "definition": "Introduces the person, thing, or topic being discussed.",
+      "is_default": true,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "about-topic-01", "text": "This story is about a dog.", "source_type": "synthetic_demo"},
+        {"id": "about-topic-02", "text": "They talked about the school trip.", "source_type": "synthetic_demo"},
+        {"id": "about-topic-03", "text": "She thinks about her new art project.", "source_type": "synthetic_demo"},
+        {"id": "about-topic-04", "text": "The book is about a family dinner.", "source_type": "synthetic_demo"}
+      ]
+    },
+    {
+      "word": "can",
+      "video_key": "demo/can/ability.mp4",
+      "sense_label": "ability or possibility",
+      "definition": "Indicates that someone or something is able to perform an action.",
+      "is_default": true,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "can-ability-01", "text": "I can cook dinner.", "source_type": "synthetic_demo"},
+        {"id": "can-ability-02", "text": "The bird can fly.", "source_type": "synthetic_demo"},
+        {"id": "can-ability-03", "text": "Maya can make dinner for everyone.", "source_type": "synthetic_demo"},
+        {"id": "can-ability-04", "text": "A cat can climb a tree.", "source_type": "synthetic_demo"}
+      ]
+    },
+    {
+      "word": "can",
+      "video_key": "demo/can/container.mp4",
+      "sense_label": "container",
+      "definition": "A cylindrical container used for food or drinks.",
+      "is_default": false,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "can-container-01", "text": "She opened a can of soup.", "source_type": "synthetic_demo"},
+        {"id": "can-container-02", "text": "He drank a can of soda.", "source_type": "synthetic_demo"},
+        {"id": "can-container-03", "text": "Put the empty can in the recycling bin.", "source_type": "synthetic_demo"},
+        {"id": "can-container-04", "text": "The metal can is on the shelf.", "source_type": "synthetic_demo"}
+      ]
+    },
+    {
+      "word": "love",
+      "video_key": "demo/love/person.mp4",
+      "sense_label": "affection for a person or animal",
+      "definition": "Expresses relational affection toward a person or animal.",
+      "is_default": true,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "love-person-01", "text": "I love my family.", "source_type": "synthetic_demo"},
+        {"id": "love-person-02", "text": "The child loves her dog.", "source_type": "synthetic_demo"},
+        {"id": "love-person-03", "text": "Maya loves her mother and father.", "source_type": "synthetic_demo"},
+        {"id": "love-person-04", "text": "We love our friends.", "source_type": "synthetic_demo"}
+      ]
+    },
+    {
+      "word": "love",
+      "video_key": "demo/love/thing.mp4",
+      "sense_label": "strongly enjoy a thing or activity",
+      "definition": "Expresses strong enjoyment or preference for an object, food, or activity.",
+      "is_default": false,
+      "review_status": "prototype_unreviewed",
+      "human_approved": false,
+      "contexts": [
+        {"id": "love-thing-01", "text": "I love to paint.", "source_type": "synthetic_demo"},
+        {"id": "love-thing-02", "text": "They love pizza.", "source_type": "synthetic_demo"},
+        {"id": "love-thing-03", "text": "The children love playing basketball.", "source_type": "synthetic_demo"},
+        {"id": "love-thing-04", "text": "We love this delicious soup.", "source_type": "synthetic_demo"}
+      ]
+    }
+  ]
+}

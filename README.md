@@ -1,86 +1,94 @@
 # PopSign Backend Prototype
 
-A proof of concept for selecting the correct ASL video when a generated story contains a word with multiple meanings.
+A testable prototype for choosing the correct ASL video when a generated story contains a word with multiple meanings.
 
-## Problem
+The current pilot demonstrates six provisional meanings across three words:
 
-A generated story can contain ambiguous vocabulary. For example, the word `rock` may mean a stone, a music genre, or the phrase `rock on`. PopSign needs to use the surrounding story context to select the ASL video that matches the intended meaning.
+- `can`: ability vs. container
+- `about`: approximate amount/time vs. topic
+- `love`: affection for a person/animal vs. enjoyment of a thing/activity
 
-This prototype demonstrates that the contextual matching can happen directly in the backend without MCP.
+The Georgia Tech PopSign repository was used only as a read-only source reference. This personal repository contains the prototype implementation.
 
-## Prototype flow
-
-```text
-Generated story
-    -> locate target vocabulary word
-    -> collect candidate ASL sign records
-    -> score each candidate against story context
-    -> select the highest-scoring meaning
-    -> return the matching video key/URL
-```
-
-The prototype uses a simple, deterministic tag-based scorer first because it is easy to explain, test, and integrate. The storage schema is designed so the same data can later support embedding similarity or an LLM fallback without changing the frontend contract.
-
-## Recommended production storage
-
-- **Amazon S3**: actual ASL video files
-- **Amazon DynamoDB**: searchable metadata for each word/sense, including tags and the S3 object key
-
-See [`docs/database_comparison.md`](docs/database_comparison.md) for the comparison and rationale.
-
-## Repository structure
+## What the demo proves
 
 ```text
-.
-├── README.md
-├── data/
-│   └── asl_signs.json
-├── docs/
-│   └── database_comparison.md
-├── src/
-│   ├── __init__.py
-│   └── context_matcher.py
-└── tests/
-    └── test_context_matcher.py
+story phrase
+    -> generate a normalized 768-D embedding
+    -> retrieve stored phrase embeddings for the target word
+    -> calculate cosine similarity
+    -> compare the winner with both a score threshold and runner-up margin
+    -> return an ASL video key or flag the phrase for review
 ```
 
-## Run the demo
+It intentionally does **not** silently choose a default video when the context is unclear.
 
-Requires Python 3.10+ and no third-party packages.
+## Quick local demo
+
+Requirements: Python 3.12+ and [`uv`](https://docs.astral.sh/uv/).
 
 ```bash
-python3 src/context_matcher.py
+uv sync --group dev
+uv run uvicorn src.api:app --reload
 ```
 
-Example result:
+Open <http://127.0.0.1:8000>.
 
-```text
-Story: I listen to music. My favorite genre is rock.
-Target word: rock
-Selected sense: music
-Selected video: asl/rock/music.mp4
-```
+The default `local` backend requires no keys or model download. It uses a deterministic 768-dimensional hashing baseline so the complete product flow can be demonstrated immediately. It is clearly separated from the optional EmbeddingGemma provider and should not be treated as the final semantic model.
 
-## Run tests
+## Supabase setup
+
+1. Run [`supabase/migrations/202610030001_vector_store.sql`](supabase/migrations/202610030001_vector_store.sql) in the Supabase SQL Editor.
+2. Copy `.env.example` to `.env` and add the project URL and server-only secret key.
+3. Seed the pilot metadata and embeddings:
 
 ```bash
-python3 -m unittest discover -s tests -v
+uv run python scripts/seed_supabase.py --provider hashing
 ```
 
-## Current matching strategy
+4. Set `POPSIGN_DATA_BACKEND=supabase` in `.env` and restart the API.
 
-For every candidate sign sense, the matcher compares normalized story words against that candidate's context tags. Exact tag hits receive the strongest weight, and a small phrase bonus is added when the sense label itself appears in the story. If there is no contextual evidence, the record marked as the default sense is returned.
+See [`docs/supabase_setup.md`](docs/supabase_setup.md) for the safe step-by-step handoff.
 
-This gives us a working backend contract now while leaving room for a later layered approach:
+## Optional EmbeddingGemma run
+
+```bash
+uv sync --extra ml --group dev
+uv run python scripts/seed_supabase.py --provider embeddinggemma
+```
+
+Then set:
+
+```dotenv
+POPSIGN_EMBEDDING_PROVIDER=embeddinggemma
+```
+
+If the model is not cached, set `GEMMA_TOKEN` locally. Never commit it.
+
+## Test and evaluate
+
+```bash
+uv run pytest -q
+uv run python scripts/seed_supabase.py --dry-run
+uv run python scripts/evaluate_thresholds.py
+```
+
+The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/threshold_exploration.ipynb) evaluate a global acceptance threshold plus a runner-up margin. Current labels and thresholds are provisional until reviewed by the PopSign ASL team.
+
+## Main files
 
 ```text
-exact/tag matching -> embedding similarity -> optional LLM fallback
+data/pilot_catalog.json               reviewed-data staging format
+src/embeddings.py                     hashing + EmbeddingGemma providers
+src/vector_matcher.py                 cosine scoring and acceptance rule
+src/api.py                            FastAPI endpoints and static demo
+scripts/seed_supabase.py              versioned embedding importer
+scripts/evaluate_thresholds.py        repeatable threshold experiment
+supabase/migrations/...sql            pgvector schema and match RPC
+web/                                  Figma-inspired mobile test frontend
+tests/                                baseline, vector, API, and schema tests
 ```
 
-## Next steps
+## Important review boundary
 
-1. Replace sample JSON records with the real PopSign ASL catalog.
-2. Put video objects in S3 and metadata in DynamoDB.
-3. Expose the matcher through the existing PopSign API layer.
-4. Add embeddings if tag matching is not sufficient for real stories.
-5. Validate ambiguous vocabulary against actual user-generated stories.
+The committed catalog uses synthetic phrases and placeholder video paths so this public repository does not expose the private PopSign context bank. Every record remains marked `human_approved: false`. The software architecture is ready to test, but approved private labels and video mappings must be imported separately before production use.

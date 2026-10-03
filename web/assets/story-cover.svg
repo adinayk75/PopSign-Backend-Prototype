@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 760" role="img" aria-labelledby="title desc">
+  <title id="title">Maya Makes Dinner</title><desc id="desc">A bright storybook cover with Maya cooking soup.</desc>
+  <rect width="800" height="760" rx="36" fill="#66b8b6"/>
+  <circle cx="650" cy="125" r="72" fill="#ffd06b" opacity=".9"/>
+  <path d="M0 590 Q170 520 350 595 T800 570 V760 H0Z" fill="#287d7e"/>
+  <text x="400" y="105" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="65" font-weight="700" fill="#fff">Maya Makes</text>
+  <text x="400" y="175" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="72" font-weight="700" fill="#fff">Dinner</text>
+  <circle cx="405" cy="335" r="92" fill="#8b552f"/>
+  <path d="M315 315 Q405 190 495 315" fill="#20232e"/>
+  <circle cx="375" cy="340" r="7"/><circle cx="435" cy="340" r="7"/>
+  <path d="M380 382 Q405 402 432 382" fill="none" stroke="#fff" stroke-width="8" stroke-linecap="round"/>
+  <path d="M282 560 Q315 420 405 420 Q500 420 530 560" fill="#ff9272"/>
+  <ellipse cx="405" cy="575" rx="210" ry="66" fill="#e6e2dc"/>
+  <path d="M245 548 H565 L525 665 H285Z" fill="#ef4e4e"/>
+  <ellipse cx="405" cy="548" rx="160" ry="38" fill="#ff7979"/>
+  <path d="M290 515 Q220 470 190 550" fill="none" stroke="#8b552f" stroke-width="28" stroke-linecap="round"/>
+  <path d="M520 515 Q585 455 620 535" fill="none" stroke="#8b552f" stroke-width="28" stroke-linecap="round"/>
+  <text x="400" y="720" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="26" fill="#dff8f5">A PopSign prototype story</text>
+</svg>

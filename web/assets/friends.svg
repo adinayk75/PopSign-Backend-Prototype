@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Friends arriving for dinner">
+  <rect width="800" height="450" fill="#f7b868"/>
+  <rect y="335" width="800" height="115" fill="#6db987"/>
+  <path d="M280 335 V165 L400 85 L520 165 V335Z" fill="#fff3dc" stroke="#303b48" stroke-width="10"/>
+  <rect x="370" y="235" width="70" height="100" fill="#62acc0"/>
+  <g stroke="#303b48" stroke-width="7">
+    <circle cx="140" cy="225" r="42" fill="#8b552f"/><path d="M85 335 Q90 270 140 270 Q190 270 195 335" fill="#d95d6e"/>
+    <circle cx="245" cy="245" r="38" fill="#d99b6c"/><path d="M195 335 Q200 285 245 285 Q290 285 295 335" fill="#5c8fd8"/>
+    <circle cx="570" cy="235" r="40" fill="#6d452d"/><path d="M520 335 Q525 278 570 278 Q615 278 620 335" fill="#9f72d5"/>
+    <circle cx="675" cy="220" r="43" fill="#bd754d"/><path d="M620 335 Q625 266 675 266 Q725 266 730 335" fill="#ed7357"/>
+  </g>
+</svg>

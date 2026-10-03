@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="A can of soup">
+  <rect width="800" height="450" fill="#45a6cf"/>
+  <circle cx="650" cy="85" r="55" fill="#f8cf65"/>
+  <path d="M0 350 Q180 295 350 365 T800 335 V450 H0Z" fill="#308eb7"/>
+  <path d="M330 125 H500 V360 H330Z" fill="#ee5955"/>
+  <ellipse cx="415" cy="125" rx="85" ry="25" fill="#e5e5e5"/>
+  <ellipse cx="415" cy="360" rx="85" ry="25" fill="#c43e43"/>
+  <rect x="342" y="195" width="146" height="92" rx="15" fill="#fff4d3"/>
+  <text x="415" y="235" text-anchor="middle" font-family="Trebuchet MS,sans-serif" font-size="28" font-weight="700" fill="#cc4444">SOUP</text>
+  <path d="M375 260 Q415 225 455 260" fill="none" stroke="#f39b35" stroke-width="12" stroke-linecap="round"/>
+  <path d="M370 80 Q335 45 372 15 M415 80 Q380 42 418 8 M458 80 Q430 42 470 15" fill="none" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".8"/>
+</svg>

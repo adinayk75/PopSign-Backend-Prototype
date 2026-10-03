@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Maya cooking dinner">
+  <rect width="800" height="450" fill="#ffd16d"/>
+  <rect y="330" width="800" height="120" fill="#59b5c9"/>
+  <rect x="70" y="80" width="210" height="180" rx="18" fill="#fff2cb"/>
+  <path d="M90 105 H260 M90 145 H260 M90 185 H260" stroke="#e5b951" stroke-width="10"/>
+  <circle cx="505" cy="150" r="72" fill="#8b552f"/>
+  <path d="M435 140 Q505 40 575 140" fill="#252735"/>
+  <path d="M410 355 Q425 225 505 225 Q600 225 610 355" fill="#ed6f67"/>
+  <path d="M365 350 H665 L625 430 H405Z" fill="#df4c4c"/>
+  <ellipse cx="515" cy="350" rx="150" ry="34" fill="#ff7777"/>
+  <path d="M425 285 Q335 255 330 350" fill="none" stroke="#8b552f" stroke-width="25" stroke-linecap="round"/>
+  <path d="M585 285 Q675 240 690 320" fill="none" stroke="#8b552f" stroke-width="25" stroke-linecap="round"/>
+  <path d="M680 255 Q700 170 660 112" fill="none" stroke="#2e4050" stroke-width="12" stroke-linecap="round"/>
+  <path d="M655 115 Q675 85 695 115" fill="none" stroke="#2e4050" stroke-width="12"/>
+</svg>

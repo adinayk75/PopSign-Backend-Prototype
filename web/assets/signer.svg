@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 480" role="img" aria-label="Signer video placeholder">
+  <rect width="400" height="480" fill="#1497cf"/>
+  <circle cx="200" cy="126" r="68" fill="#8b552f"/>
+  <path d="M135 115 Q200 28 265 115" fill="#242632"/>
+  <circle cx="177" cy="128" r="6"/><circle cx="223" cy="128" r="6"/>
+  <path d="M180 165 Q200 177 220 165" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round"/>
+  <path d="M76 480 Q80 225 200 225 Q320 225 324 480Z" fill="#171a20"/>
+  <path d="M145 320 Q115 345 102 405" fill="none" stroke="#8b552f" stroke-width="34" stroke-linecap="round"/>
+  <path d="M255 320 Q285 345 298 405" fill="none" stroke="#8b552f" stroke-width="34" stroke-linecap="round"/>
+  <path d="M102 405 Q155 440 200 420 Q245 440 298 405" fill="none" stroke="#8b552f" stroke-width="28" stroke-linecap="round"/>
+</svg>

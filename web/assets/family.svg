@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 450" role="img" aria-label="Maya with her family">
+  <rect width="800" height="450" fill="#f08bb1"/>
+  <path d="M400 100 C325 10 205 75 225 175 C245 275 400 350 400 350 C400 350 555 275 575 175 C595 75 475 10 400 100Z" fill="#e84f62"/>
+  <g stroke="#28323e" stroke-width="8">
+    <circle cx="295" cy="205" r="55" fill="#8b552f"/><path d="M220 400 Q225 275 295 275 Q365 275 370 400" fill="#59b5c9"/>
+    <circle cx="505" cy="205" r="55" fill="#bd754d"/><path d="M430 400 Q435 275 505 275 Q575 275 580 400" fill="#ffd36e"/>
+    <circle cx="400" cy="255" r="48" fill="#d99b6c"/><path d="M338 415 Q342 315 400 315 Q458 315 462 415" fill="#8b69ce"/>
+  </g>
+</svg>

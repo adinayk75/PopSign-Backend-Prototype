@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" role="img" aria-label="My Cat story cover">
+  <rect width="500" height="560" fill="#60aaa8"/>
+  <text x="250" y="95" text-anchor="middle" font-family="Georgia,serif" font-size="64" fill="#fff">My cat</text>
+  <path d="M90 360 Q95 230 205 245 L240 190 L270 250 Q400 275 420 390 Q375 480 225 465 Q85 455 90 360Z" fill="#3b2f35"/>
+  <path d="M330 280 Q390 210 420 285" fill="none" stroke="#3b2f35" stroke-width="25" stroke-linecap="round"/>
+  <circle cx="305" cy="315" r="8" fill="#b9ed6a"/>
+</svg>

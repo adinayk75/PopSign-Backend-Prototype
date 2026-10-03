@@ -1,0 +1,28 @@
+[project]
+name = "popsign-backend-prototype"
+version = "0.2.0"
+description = "Supabase-backed contextual ASL sign matching prototype"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.118.0,<1",
+    "python-dotenv>=1.1.1,<2",
+    "supabase>=2.22.0,<3",
+    "uvicorn[standard]>=0.37.0,<1",
+]
+
+[project.optional-dependencies]
+ml = [
+    "sentence-transformers>=5.1.2,<6",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28.1,<1",
+    "ipykernel>=7.1.0,<8",
+    "pytest>=8.4.2,<9",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]

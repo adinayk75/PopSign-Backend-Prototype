@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 560" role="img" aria-label="Book preview placeholder">
+  <rect width="500" height="560" fill="#ececec"/>
+  <rect x="35" y="35" width="430" height="490" fill="#f8f8f8" stroke="#9b9b9b" stroke-width="7"/>
+  <text x="250" y="110" text-anchor="middle" font-family="Georgia,serif" font-size="42" fill="#555">BIG DOG...</text>
+  <text x="250" y="155" text-anchor="middle" font-family="Georgia,serif" font-size="38" fill="#555">LITTLE DOG</text>
+  <circle cx="175" cy="315" r="65" fill="none" stroke="#777" stroke-width="11"/>
+  <circle cx="325" cy="330" r="48" fill="none" stroke="#777" stroke-width="11"/>
+  <path d="M130 410 Q175 350 220 410 M290 410 Q325 370 360 410" fill="none" stroke="#777" stroke-width="12"/>
+</svg>

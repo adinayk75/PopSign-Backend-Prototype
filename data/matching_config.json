@@ -1,0 +1,8 @@
+{
+  "global": {
+    "accept_threshold": 0.35,
+    "margin_threshold": 0.10,
+    "top_k_contexts": 3
+  },
+  "per_word": {}
+}

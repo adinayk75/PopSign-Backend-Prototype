@@ -1,0 +1,170 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#ffffff" />
+    <title>PopSign Storybooks</title>
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body>
+    <div class="prototype-layout">
+      <main class="phone" aria-label="PopSign mobile prototype">
+        <div class="status-bar" aria-hidden="true">
+          <span>9:41</span>
+          <span class="status-icons">▮▮▮ ))) ▰</span>
+        </div>
+
+        <section class="view active" id="generate-view" aria-labelledby="generate-heading">
+          <header class="centered-header">
+            <span class="eyebrow">STORYBOOKS</span>
+            <h1 id="generate-heading">Generate Story</h1>
+            <p>Create a story personalized to your needs and interests!</p>
+          </header>
+
+          <div class="form-card">
+            <label for="story-prompt">Story Prompt</label>
+            <textarea id="story-prompt" rows="5">A child makes dinner for family and friends.</textarea>
+            <p class="field-help">The repeatable demo story tests both meanings of <b>can</b>, <b>about</b>, and <b>love</b>.</p>
+          </div>
+
+          <fieldset class="choice-group">
+            <legend>Theme</legend>
+            <div class="choice-row" id="theme-options">
+              <button class="choice active" type="button">Cooking</button>
+              <button class="choice" type="button">Family</button>
+              <button class="choice" type="button">Adventure</button>
+            </div>
+          </fieldset>
+
+          <fieldset class="choice-group">
+            <legend>Difficulty</legend>
+            <div class="choice-row" id="difficulty-options">
+              <button class="choice active" type="button">Level A</button>
+              <button class="choice" type="button">Level B</button>
+              <button class="choice" type="button">Level C</button>
+            </div>
+          </fieldset>
+
+          <div class="system-strip">
+            <span class="status-dot" id="api-status-dot"></span>
+            <span id="api-status">Checking backend…</span>
+          </div>
+
+          <button class="primary-button" id="generate-button" type="button">Generate</button>
+        </section>
+
+        <section class="view" id="library-view" aria-labelledby="library-heading">
+          <header class="page-header">
+            <span class="eyebrow">YOUR COLLECTION</span>
+            <h1 id="library-heading">Storybooks</h1>
+          </header>
+          <label class="search-box">
+            <span aria-hidden="true">⌕</span>
+            <input id="library-search" type="search" placeholder="Search" />
+          </label>
+          <div class="segmented-control" aria-label="Library section">
+            <button class="active" type="button">Your Collection</button>
+            <button type="button">Explore</button>
+          </div>
+          <div class="book-grid" id="book-grid"></div>
+        </section>
+
+        <section class="view" id="cover-view" aria-labelledby="cover-title">
+          <header class="centered-header compact">
+            <span class="eyebrow">LET'S LEARN PHRASES</span>
+            <h1 id="cover-title">Maya Makes Dinner</h1>
+            <p>Learn to sign phrases using words from this story.</p>
+          </header>
+          <img class="cover-art" id="cover-art" src="/assets/story-cover.svg" alt="Story cover" />
+          <dl class="story-meta">
+            <div><dt>Difficulty</dt><dd id="cover-difficulty">Level A</dd></div>
+            <div><dt>Author</dt><dd id="cover-author">PopSign Prototype</dd></div>
+          </dl>
+          <button class="primary-button" id="start-learning" type="button">Start Learning</button>
+        </section>
+
+        <section class="view reader-view" id="reader-view" aria-labelledby="reader-title">
+          <div class="reader-topline">
+            <span id="page-number">Page 1 / 6</span>
+            <div>
+              <button class="pill-button active" id="info-toggle" type="button">Info</button>
+              <button class="pill-button" id="grammar-toggle" type="button">Grammar</button>
+            </div>
+          </div>
+          <h1 id="reader-title">Maya Makes Dinner</h1>
+          <img class="page-art" id="page-art" src="/assets/cooking.svg" alt="Story page illustration" />
+
+          <div class="sentence-nav">
+            <button class="arrow-button" id="previous-page" type="button" aria-label="Previous page">
+              <span aria-hidden="true">◆</span><small>Previous</small>
+            </button>
+            <p class="story-sentence" id="story-sentence">Maya can cook dinner.</p>
+            <button class="arrow-button" id="next-page" type="button" aria-label="Next page">
+              <span aria-hidden="true">◆</span><small>Next</small>
+            </button>
+          </div>
+
+          <h2>ASL</h2>
+          <div class="word-chips" id="word-chips"></div>
+
+          <div class="sign-layout">
+            <article class="sign-info" id="sign-info-card">
+              <div class="decision-row">
+                <h3>Sign Info</h3>
+                <span class="decision-badge" id="decision-badge">Matching…</span>
+              </div>
+              <strong id="sense-label">Loading meaning…</strong>
+              <p id="sense-description">Comparing this phrase with stored context examples.</p>
+              <div class="match-details" id="match-details">
+                <span>Top score <b id="top-score">—</b></span>
+                <span>Margin <b id="score-margin">—</b></span>
+              </div>
+            </article>
+
+            <article class="sign-video" aria-label="Selected ASL video">
+              <img src="/assets/signer.svg" alt="ASL signer placeholder" />
+              <span class="video-label" id="video-key">Waiting for match</span>
+            </article>
+          </div>
+
+          <div class="speed-control">
+            <span aria-label="Slower">🐢</span>
+            <input id="speed-slider" type="range" min="0.5" max="1.5" step="0.25" value="1" />
+            <span aria-label="Faster">🐇</span>
+            <output id="speed-label">1×</output>
+          </div>
+
+          <button class="secondary-button" id="return-to-phrase" type="button">Return to Phrase</button>
+          <p class="review-notice" id="review-notice"></p>
+        </section>
+
+        <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+        <nav class="bottom-nav" aria-label="Primary navigation">
+          <button data-view="generate" type="button"><span>⌂</span><small>Home</small></button>
+          <button data-view="sign-look" type="button"><span>⌕</span><small>Sign Look</small></button>
+          <button data-view="library" class="active" type="button"><span>▣</span><small>Books</small></button>
+          <button data-view="review" type="button"><span>✎</span><small>Review</small></button>
+        </nav>
+      </main>
+
+      <aside class="demo-panel">
+        <span class="eyebrow">VECTOR DEMO</span>
+        <h2>Same word.<br />Correct sign.</h2>
+        <p>This prototype compares each story phrase with phrase embeddings stored locally or in Supabase.</p>
+        <ol>
+          <li>Generate the demo story.</li>
+          <li>Start learning.</li>
+          <li>Compare pages 1 and 2: both use “can,” but return different video keys.</li>
+        </ol>
+        <div class="backend-card">
+          <span>Active backend</span>
+          <strong id="desktop-backend">Checking…</strong>
+          <small id="desktop-model">—</small>
+        </div>
+      </aside>
+    </div>
+    <script src="/static/app.js" defer></script>
+  </body>
+</html>

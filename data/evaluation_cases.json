@@ -1,0 +1,17 @@
+[
+  {"phrase": "Maya can cook dinner.", "word": "can", "expected_video_key": "demo/can/ability.mp4"},
+  {"phrase": "A penguin cannot fly, but most birds can fly.", "word": "can", "expected_video_key": "demo/can/ability.mp4"},
+  {"phrase": "She opened a can of soup.", "word": "can", "expected_video_key": "demo/can/container.mp4"},
+  {"phrase": "Recycle the empty soda can.", "word": "can", "expected_video_key": "demo/can/container.mp4"},
+  {"phrase": "About ten friends came to dinner.", "word": "about", "expected_video_key": "demo/about/approximate.mp4"},
+  {"phrase": "We should arrive at about noon.", "word": "about", "expected_video_key": "demo/about/approximate.mp4"},
+  {"phrase": "The story is about Maya's family.", "word": "about", "expected_video_key": "demo/about/topic.mp4"},
+  {"phrase": "They talked about the meal.", "word": "about", "expected_video_key": "demo/about/topic.mp4"},
+  {"phrase": "Maya loves her family.", "word": "love", "expected_video_key": "demo/love/person.mp4"},
+  {"phrase": "The child loves her dog.", "word": "love", "expected_video_key": "demo/love/person.mp4"},
+  {"phrase": "They love pizza and soup.", "word": "love", "expected_video_key": "demo/love/thing.mp4"},
+  {"phrase": "The children love playing basketball.", "word": "love", "expected_video_key": "demo/love/thing.mp4"},
+  {"phrase": "The word can appears in this sentence.", "word": "can", "expected_video_key": null},
+  {"phrase": "This sentence is about.", "word": "about", "expected_video_key": null},
+  {"phrase": "I simply love.", "word": "love", "expected_video_key": null}
+]
