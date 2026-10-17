@@ -38,11 +38,11 @@ The default `local` backend requires no keys or model download. It uses a determ
 
 ## Production data status
 
-Phases 1–3 are deployed to the `popsign-demo` Supabase project. The production
-`popsign_*` schema, the complete private workbook base dataset, and a real
-semantic embedding for every target-word/phrase pair were reconciled and
-loaded on 2026-10-17. **Do not run the three-word pilot seeder against the real
-PopSign Supabase project.**
+Phases 1–3 and the Phase 4 evaluation record are deployed to the `popsign-demo`
+Supabase project. The production `popsign_*` schema, the complete private
+workbook base dataset, and a real semantic embedding for every
+target-word/phrase pair were reconciled and loaded on 2026-10-17. **Do not run
+the three-word pilot seeder against the real PopSign Supabase project.**
 
 Phase 1 audited the complete source workbook rather than a small sample:
 
@@ -76,7 +76,18 @@ IDs, 11,924 distinct source hashes, zero wrong-dimension rows, and a working
 See [`docs/phase3_embeddings.md`](docs/phase3_embeddings.md) and
 [`data/phase3_embedding_verification.json`](data/phase3_embedding_verification.json)
 for the Phase 3 workflow and public-safe completion record. The model remains a
-`candidate` until Phase 4 evaluates and activates thresholds.
+`candidate` because Phase 4 did not clear every activation gate.
+
+Phase 4 evaluated those exact vectors across **576** provisional cases: 498
+source-derived leave-one-out/shared-context cases and 78 LLM-generated cases.
+The conservative global baseline is a 0.35 score threshold plus a 0.17
+runner-up margin over the top two reference contexts. On holdout data it reached
+95.8% accepted precision and 90.3% ambiguous rejection, but only 40.2% positive
+coverage. It therefore remains **inactive** pending ASL-team label review and
+better differentiated reference contexts. See
+[`docs/phase4_thresholds.md`](docs/phase4_thresholds.md) and the public-safe
+[`data/phase4_supabase_verification.json`](data/phase4_supabase_verification.json)
+live verification record.
 
 See [`docs/phase2_data_model.md`](docs/phase2_data_model.md) for the schema, safety rules, and import commands.
 
@@ -107,9 +118,15 @@ commit credentials.
 uv run pytest -q
 uv run python scripts/seed_supabase.py --dry-run
 uv run python scripts/evaluate_thresholds.py
+uv run python scripts/evaluate_production_thresholds.py
 ```
 
-The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/threshold_exploration.ipynb) evaluate a global acceptance threshold plus a runner-up margin. The current local script still uses the hashing demo; Phase 4 will run reviewed evaluation cases against the exact pinned MPNet model before activating any production threshold.
+The original threshold script keeps the small hashing demo reproducible. The
+production script and
+[`notebooks/threshold_exploration.ipynb`](notebooks/threshold_exploration.ipynb)
+evaluate the pinned MPNet vectors using a global acceptance threshold plus a
+runner-up margin. Phase 4 recorded an inactive candidate; no production rule is
+activated until its labels and video mappings are reviewed.
 
 ## Main files
 
@@ -129,6 +146,7 @@ scripts/export_context_bank_csv.py    private dashboard CSV fallback exporter
 scripts/embed_context_bank.py         complete embedding validator/importer
 scripts/export_context_bank_embeddings.py  private semantic-vector CSV exporter
 scripts/evaluate_thresholds.py        repeatable threshold experiment
+scripts/evaluate_production_thresholds.py  Phase 4 MPNet evaluation and checkpoints
 supabase/migrations/...sql            pilot and production pgvector schemas
 supabase/verification/...sql          read-only live completion checks
 web/                                  Figma-inspired mobile test frontend
@@ -136,6 +154,7 @@ tests/                                baseline, vector, API, and schema tests
 docs/context_bank_audit.md            Phase 1 production-data findings
 docs/phase2_data_model.md              Phase 2 production architecture
 docs/phase3_embeddings.md              Phase 3 embedding run and verification
+docs/phase4_thresholds.md               Phase 4 evaluation and activation decision
 ```
 
 ## Important review boundary

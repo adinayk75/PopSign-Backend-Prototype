@@ -1,0 +1,42 @@
+{
+  "candidate_threshold": {
+    "accept_threshold": 0.35,
+    "id": "f0746f95-0581-53ca-ac9f-fd67d5c16100",
+    "is_active": false,
+    "margin_threshold": 0.17,
+    "top_k_contexts": 2
+  },
+  "checks": {
+    "active_global_thresholds": {
+      "actual": "0",
+      "expected": "0",
+      "matches_expected": true
+    },
+    "candidate_values": {
+      "actual": "1",
+      "expected": "1",
+      "matches_expected": true
+    },
+    "evaluation_run": {
+      "actual": "1",
+      "expected": "1",
+      "matches_expected": true
+    },
+    "inactive_candidate_threshold": {
+      "actual": "1",
+      "expected": "1",
+      "matches_expected": true
+    },
+    "model_lifecycle": {
+      "actual": "candidate",
+      "expected": "candidate",
+      "matches_expected": true
+    }
+  },
+  "embedding_model_id": "ab922308-695a-50c2-ad75-9f5bd7c163a9",
+  "evaluation_run_id": "032997a7-2c9d-5d32-889e-b93b70295c12",
+  "phase": "threshold_candidate_recorded",
+  "project": "popsign-demo",
+  "schema_version": "2026-10-17.1",
+  "verified_at": "2026-10-17T18:00:29Z"
+}

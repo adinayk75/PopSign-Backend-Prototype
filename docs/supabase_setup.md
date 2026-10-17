@@ -15,11 +15,16 @@
   word-phrase IDs, unique source hashes, dimensions, and live vector matching.
 - The import run is marked `completed` with phase `embeddings_complete`.
 - No hashing-demo vectors were uploaded to the production embedding tables;
-  the MPNet model remains a `candidate` until threshold evaluation is complete.
+  the MPNet model remains a `candidate` because Phase 4 did not clear every
+  activation gate.
+- Phase 4 produced a conservative global threshold candidate and stored its
+  aggregate evaluation record separately. The threshold is intentionally
+  `is_active = false`: human label review and coverage gates have not passed.
 
 The public-safe live verification records are in
 `data/phase2_supabase_verification.json` and
-`data/phase3_embedding_verification.json`.
+`data/phase3_embedding_verification.json`, with the inactive Phase 4 candidate
+record verified in `data/phase4_supabase_verification.json`.
 
 ## Rebuild the schema if a new project is created
 

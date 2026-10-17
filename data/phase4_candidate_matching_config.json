@@ -1,0 +1,14 @@
+{
+  "activation_blocker": "ASL label review is incomplete.",
+  "evaluation_run_id": "032997a7-2c9d-5d32-889e-b93b70295c12",
+  "global": {
+    "accept_threshold": 0.35,
+    "margin_threshold": 0.17,
+    "top_k_contexts": 2
+  },
+  "is_active": false,
+  "model_name": "sentence-transformers/all-mpnet-base-v2",
+  "model_version": "hf-e8c3b32edf5434bc2275fc9bab85f82640a19130",
+  "per_word": {},
+  "schema_version": "2026-10-17.1"
+}
