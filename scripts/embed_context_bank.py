@@ -41,7 +41,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--sheet")
     parser.add_argument(
         "--provider",
-        choices=("hashing", "embeddinggemma"),
+        choices=("hashing", "mpnet", "embeddinggemma"),
         default=os.getenv("POPSIGN_EMBEDDING_PROVIDER", "hashing"),
     )
     parser.add_argument(
@@ -73,8 +73,8 @@ def main() -> None:
         )
     if args.apply and args.provider == "hashing" and not args.allow_demo_provider:
         raise SystemExit(
-            "Refusing to upload hashing-demo vectors. Use EmbeddingGemma, or pass "
-            "--allow-demo-provider only for an isolated non-production database."
+            "Refusing to upload hashing-demo vectors. Use MPNet or EmbeddingGemma, "
+            "or pass --allow-demo-provider only for an isolated non-production database."
         )
     if (
         args.apply

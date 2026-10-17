@@ -30,15 +30,11 @@ class EmbeddingImportResult:
 
 
 def prompt_template(provider: EmbeddingProvider) -> str:
-    if provider.model_name == "google/embeddinggemma-300M":
-        return 'Meaning of "{target_word}" in this sentence: {context_text}'
-    return "hashing-demo-v1(target_word={target_word}, context={context_text})"
+    return provider.prompt_template
 
 
 def provider_kind(provider: EmbeddingProvider) -> str:
-    if provider.model_name == "google/embeddinggemma-300M":
-        return "sentence_transformers"
-    return "hashing_demo"
+    return provider.provider_kind
 
 
 def build_embedding_plan(
@@ -108,9 +104,16 @@ def build_embedding_rows(
     provider: EmbeddingProvider,
     embedding_model_id: str,
 ) -> list[dict[str, Any]]:
+    vectors = provider.embed_many(
+        (pair["context_text"], pair["target_word"]) for pair in pairs
+    )
+    if len(vectors) != len(pairs):
+        raise ValueError(
+            f"Expected {len(pairs)} embeddings; received {len(vectors)}."
+        )
+
     rows: list[dict[str, Any]] = []
-    for pair in pairs:
-        vector = provider.embed(pair["context_text"], pair["target_word"])
+    for pair, vector in zip(pairs, vectors, strict=True):
         if len(vector) != provider.dimensions:
             raise ValueError(
                 f"Expected {provider.dimensions} dimensions; received {len(vector)}."

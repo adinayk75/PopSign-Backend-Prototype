@@ -9,11 +9,17 @@
 - `supabase/migrations/202610170002_production_context_bank.sql` was applied on 2026-10-17.
 - The complete workbook base dataset was imported; no reduced sample was used.
 - A database-side reconciliation returned `true` for all 14 expected-count checks.
-- The import run is marked `completed` with phase `base_data_complete`.
-- No hashing-demo vectors were uploaded to the production embedding tables.
+- All 11,924 target-word/phrase pairs now have a pinned, normalized, 768-D
+  MPNet semantic embedding.
+- Phase 3 database checks passed for model identity, record count, unique
+  word-phrase IDs, unique source hashes, dimensions, and live vector matching.
+- The import run is marked `completed` with phase `embeddings_complete`.
+- No hashing-demo vectors were uploaded to the production embedding tables;
+  the MPNet model remains a `candidate` until threshold evaluation is complete.
 
-The public-safe live verification record is in
-`data/phase2_supabase_verification.json`.
+The public-safe live verification records are in
+`data/phase2_supabase_verification.json` and
+`data/phase3_embedding_verification.json`.
 
 ## Rebuild the schema if a new project is created
 
@@ -115,17 +121,39 @@ uv run uvicorn src.api:app --reload
 
 Open <http://127.0.0.1:8000>. The Generate Story screen should report `supabase · 768-D vectors`.
 
-## Generate the full EmbeddingGemma set
+## Generate the complete semantic embedding set
 
 The complete context bank contains 11,924 unique target-word and phrase pairs. After the base data import:
 
 ```bash
 uv sync --extra ml --group dev
-export POPSIGN_EMBEDDING_MODEL_REVISION=<immutable-hugging-face-commit-sha>
-uv run python scripts/embed_context_bank.py --provider embeddinggemma --apply
+uv run python scripts/embed_context_bank.py --provider mpnet
 ```
 
-The command requires an immutable model revision, stores it with every vector set, and resumes after its last uploaded batch if interrupted. The hashing provider can validate all records locally, but the command blocks uploading those demo vectors unless an explicit test-only override is provided.
+MPNet defaults to the immutable revision used by the verified Phase 3 run. To
+upload through the server-side API, configure the server secret locally and add
+`--apply`. The command checkpoints every confirmed batch and resumes after an
+interruption. The hashing provider can validate all records locally, but the
+command blocks uploading those demo vectors unless an explicit test-only
+override is provided.
+
+If a server key is intentionally unavailable, generate private, resumable CSV
+batches for the authenticated dashboard:
+
+```bash
+uv run python scripts/export_context_bank_embeddings.py \
+  --workbook /absolute/path/to/context_bank.xlsx \
+  --provider mpnet \
+  --batch-size 1000
+```
+
+The manifest and CSV files stay under ignored `.popsign-state/`. Import the
+single model file first, then each phrase-embedding file in manifest order.
+Never commit or share those private exports.
+
+EmbeddingGemma remains an optional gated alternative. Set `GEMMA_TOKEN` and an
+immutable `POPSIGN_EMBEDDING_MODEL_REVISION`, then select
+`--provider embeddinggemma`.
 
 ## Optional three-word demo: replace synthetic embeddings with EmbeddingGemma
 

@@ -2,7 +2,11 @@ import math
 
 from src.context_bank import build_import_payload
 from src.context_bank_embeddings import build_embedding_plan, build_embedding_rows
-from src.embeddings import EMBEDDING_DIMENSIONS, HashingEmbeddingProvider
+from src.embeddings import (
+    EMBEDDING_DIMENSIONS,
+    HashingEmbeddingProvider,
+    MpnetEmbeddingProvider,
+)
 from tests.test_context_bank_import import sample_bank
 
 
@@ -14,6 +18,14 @@ def test_embedding_plan_has_one_vector_per_word_phrase():
     assert len(plan.word_phrases) == payload.summary["word_phrases"]
     assert plan.model_row["dimensions"] == EMBEDDING_DIMENSIONS
     assert plan.model_row["lifecycle_status"] == "demo"
+
+
+def test_mpnet_metadata_is_version_pinned_without_loading_the_model():
+    assert MpnetEmbeddingProvider.default_revision == (
+        "e8c3b32edf5434bc2275fc9bab85f82640a19130"
+    )
+    assert MpnetEmbeddingProvider.provider_kind == "sentence_transformers"
+    assert "{target_word}" in MpnetEmbeddingProvider.prompt_template
 
 
 def test_embedding_rows_are_versioned_hashed_and_normalized():

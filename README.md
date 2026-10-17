@@ -38,7 +38,11 @@ The default `local` backend requires no keys or model download. It uses a determ
 
 ## Production data status
 
-Phase 2 is deployed to the `popsign-demo` Supabase project. The production `popsign_*` schema and the complete private workbook base dataset were reconciled and imported on 2026-10-17. The schema also includes versioned storage and resumable import tooling for the later production embedding run. **Do not run the three-word pilot seeder against the real PopSign Supabase project.**
+Phases 1–3 are deployed to the `popsign-demo` Supabase project. The production
+`popsign_*` schema, the complete private workbook base dataset, and a real
+semantic embedding for every target-word/phrase pair were reconciled and
+loaded on 2026-10-17. **Do not run the three-word pilot seeder against the real
+PopSign Supabase project.**
 
 Phase 1 audited the complete source workbook rather than a small sample:
 
@@ -60,27 +64,42 @@ The verified production dry run prepares:
 
 Those same counts were verified inside Supabase after the live import. See
 [`data/phase2_supabase_verification.json`](data/phase2_supabase_verification.json)
-for the public-safe completion record. Production semantic embeddings are a
-later phase; no hashing-demo vectors were uploaded to the real project.
+for the public-safe Phase 2 record.
+
+Phase 3 generated and uploaded all **11,924** production-candidate vectors with
+`sentence-transformers/all-mpnet-base-v2`, pinned to Hugging Face revision
+`e8c3b32edf5434bc2275fc9bab85f82640a19130`. Every vector is normalized and
+768-dimensional. Live database checks confirmed 11,924 distinct word-phrase
+IDs, 11,924 distinct source hashes, zero wrong-dimension rows, and a working
+`popsign_match_context_phrases` call. No hashing-demo vectors were uploaded.
+
+See [`docs/phase3_embeddings.md`](docs/phase3_embeddings.md) and
+[`data/phase3_embedding_verification.json`](data/phase3_embedding_verification.json)
+for the Phase 3 workflow and public-safe completion record. The model remains a
+`candidate` until Phase 4 evaluates and activates thresholds.
 
 See [`docs/phase2_data_model.md`](docs/phase2_data_model.md) for the schema, safety rules, and import commands.
 
-## Optional local EmbeddingGemma demo
+## Optional local semantic demo
 
-This still uses the synthetic three-word catalog and must not point at the production Supabase project.
+MPNet is the credential-free semantic provider used by the Phase 3 candidate
+run. This command still uses the synthetic three-word catalog and must not
+point at the production Supabase project.
 
 ```bash
 uv sync --extra ml --group dev
-uv run python scripts/seed_supabase.py --provider embeddinggemma
+uv run python scripts/seed_supabase.py --provider mpnet --dry-run
 ```
 
 Then set:
 
 ```dotenv
-POPSIGN_EMBEDDING_PROVIDER=embeddinggemma
+POPSIGN_EMBEDDING_PROVIDER=mpnet
 ```
 
-If the model is not cached, set `GEMMA_TOKEN` locally. Never commit it.
+EmbeddingGemma remains available as an optional gated provider. It requires an
+accepted model license, a local `GEMMA_TOKEN`, and an immutable revision. Never
+commit credentials.
 
 ## Test and evaluate
 
@@ -90,7 +109,7 @@ uv run python scripts/seed_supabase.py --dry-run
 uv run python scripts/evaluate_thresholds.py
 ```
 
-The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/threshold_exploration.ipynb) evaluate a global acceptance threshold plus a runner-up margin. Current labels and thresholds are provisional until reviewed by the PopSign ASL team.
+The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/threshold_exploration.ipynb) evaluate a global acceptance threshold plus a runner-up margin. The current local script still uses the hashing demo; Phase 4 will run reviewed evaluation cases against the exact pinned MPNet model before activating any production threshold.
 
 ## Main files
 
@@ -100,19 +119,23 @@ data/context_bank_audit.json          public-safe full-workbook audit metrics
 src/context_bank.py                   full private-workbook transformer
 src/context_bank_embeddings.py        versioned, checkpointed embedding batches
 src/supabase_import.py                resumable deterministic Supabase upserts
-src/embeddings.py                     hashing + EmbeddingGemma providers
+src/embeddings.py                     hashing, MPNet, and EmbeddingGemma providers
+src/embedding_export.py               resumable private embedding CSV exports
 src/vector_matcher.py                 cosine scoring and acceptance rule
 src/api.py                            FastAPI endpoints and static demo
 scripts/seed_supabase.py              pilot-only versioned demo seeder
 scripts/import_context_bank.py        complete base-data validator/importer
 scripts/export_context_bank_csv.py    private dashboard CSV fallback exporter
 scripts/embed_context_bank.py         complete embedding validator/importer
+scripts/export_context_bank_embeddings.py  private semantic-vector CSV exporter
 scripts/evaluate_thresholds.py        repeatable threshold experiment
 supabase/migrations/...sql            pilot and production pgvector schemas
+supabase/verification/...sql          read-only live completion checks
 web/                                  Figma-inspired mobile test frontend
 tests/                                baseline, vector, API, and schema tests
 docs/context_bank_audit.md            Phase 1 production-data findings
 docs/phase2_data_model.md              Phase 2 production architecture
+docs/phase3_embeddings.md              Phase 3 embedding run and verification
 ```
 
 ## Important review boundary

@@ -114,7 +114,7 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Seed PopSign pilot vectors into Supabase.")
     parser.add_argument(
         "--provider",
-        choices=("hashing", "embeddinggemma"),
+        choices=("hashing", "mpnet", "embeddinggemma"),
         default=os.getenv("POPSIGN_EMBEDDING_PROVIDER", "hashing"),
     )
     parser.add_argument(

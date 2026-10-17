@@ -19,10 +19,20 @@ class EmbeddingProvider(ABC):
     dimensions = EMBEDDING_DIMENSIONS
     model_name: str
     model_version: str
+    provider_kind: str
+    prompt_template: str
 
     @abstractmethod
     def embed(self, text: str, target_word: str | None = None) -> list[float]:
         raise NotImplementedError
+
+    def embed_many(
+        self,
+        items: Iterable[tuple[str, str | None]],
+    ) -> list[list[float]]:
+        """Embed several inputs with a scalar fallback for lightweight providers."""
+
+        return [self.embed(text, target_word) for text, target_word in items]
 
 
 def _normalize(vector: Iterable[float]) -> list[float]:
@@ -44,6 +54,8 @@ class HashingEmbeddingProvider(EmbeddingProvider):
 
     model_name = "popsign/hash-context-768"
     model_version = "1"
+    provider_kind = "hashing_demo"
+    prompt_template = "hashing-demo-v1(target_word={target_word}, context={context_text})"
 
     _concept_terms = {
         "ability": {"able", "ability", "can", "climb", "cook", "could", "do", "fly", "make", "possible", "run"},
@@ -107,45 +119,118 @@ class HashingEmbeddingProvider(EmbeddingProvider):
         return _normalize(vector)
 
 
-class EmbeddingGemmaProvider(EmbeddingProvider):
-    """Optional production-oriented provider backed by EmbeddingGemma."""
+class SentenceTransformerEmbeddingProvider(EmbeddingProvider):
+    """Version-pinned, batched sentence-transformers embedding provider."""
 
-    model_name = "google/embeddinggemma-300M"
-    model_version = "unversioned"
+    provider_kind = "sentence_transformers"
+    prompt_template = 'Meaning of "{target_word}" in this sentence: {context_text}'
+    model_name: str
+    revision_environment_variable: str
+    default_revision: str | None = None
 
     def __init__(self) -> None:
         try:
             from sentence_transformers import SentenceTransformer
         except ImportError as exc:
             raise RuntimeError(
-                "EmbeddingGemma support is not installed. Run `uv sync --extra ml`."
+                "Semantic embedding support is not installed. "
+                "Run `uv sync --extra ml`."
             ) from exc
 
         token = os.getenv("GEMMA_TOKEN") or os.getenv("HF_TOKEN")
-        revision = os.getenv("POPSIGN_EMBEDDING_MODEL_REVISION")
-        model_options = {"token": token, "device": "cpu"}
-        if revision:
-            model_options["revision"] = revision
-            self.model_version = f"hf-{revision}"
+        revision = (
+            os.getenv(self.revision_environment_variable)
+            or os.getenv("POPSIGN_EMBEDDING_MODEL_REVISION")
+            or self.default_revision
+        )
+        if not revision:
+            raise RuntimeError(
+                f"Set {self.revision_environment_variable} to an immutable "
+                f"Hugging Face commit SHA for {self.model_name}."
+            )
+
+        self.model_version = f"hf-{revision}"
+        model_options = {
+            "token": token,
+            "device": "cpu",
+            "revision": revision,
+        }
         self._model = SentenceTransformer(self.model_name, **model_options)
 
-    def embed(self, text: str, target_word: str | None = None) -> list[float]:
-        prompt = text.strip()
-        if target_word:
-            prompt = f'Meaning of "{target_word}" in this sentence: {prompt}'
-        vector = self._model.encode(prompt, normalize_embeddings=True)
-        values = [float(value) for value in vector]
-        if len(values) != self.dimensions:
+        dimension_reader = getattr(self._model, "get_embedding_dimension", None)
+        if dimension_reader is None:
+            dimension_reader = self._model.get_sentence_embedding_dimension
+        actual_dimensions = int(dimension_reader())
+        if actual_dimensions != self.dimensions:
             raise ValueError(
-                f"Expected {self.dimensions} embedding dimensions, received {len(values)}."
+                f"Expected {self.dimensions} embedding dimensions, "
+                f"received {actual_dimensions}."
             )
-        return values
+
+    def _prompt(self, text: str, target_word: str | None) -> str:
+        normalized = text.strip()
+        if not target_word:
+            return normalized
+        return self.prompt_template.format(
+            target_word=target_word.strip(),
+            context_text=normalized,
+        )
+
+    def embed(self, text: str, target_word: str | None = None) -> list[float]:
+        return self.embed_many([(text, target_word)])[0]
+
+    def embed_many(
+        self,
+        items: Iterable[tuple[str, str | None]],
+    ) -> list[list[float]]:
+        materialized = list(items)
+        if not materialized:
+            return []
+
+        prompts = [self._prompt(text, target_word) for text, target_word in materialized]
+        batch_size = int(os.getenv("POPSIGN_MODEL_BATCH_SIZE", "32"))
+        vectors = self._model.encode(
+            prompts,
+            batch_size=batch_size,
+            normalize_embeddings=True,
+            show_progress_bar=False,
+        )
+        rows = [[float(value) for value in vector] for vector in vectors]
+        if len(rows) != len(materialized):
+            raise ValueError(
+                f"Expected {len(materialized)} embeddings, received {len(rows)}."
+            )
+        for values in rows:
+            if len(values) != self.dimensions:
+                raise ValueError(
+                    f"Expected {self.dimensions} embedding dimensions, "
+                    f"received {len(values)}."
+                )
+        return rows
+
+
+class MpnetEmbeddingProvider(SentenceTransformerEmbeddingProvider):
+    """Credential-free Apache-2.0 semantic model for the production candidate run."""
+
+    model_name = "sentence-transformers/all-mpnet-base-v2"
+    revision_environment_variable = "POPSIGN_MPNET_MODEL_REVISION"
+    default_revision = "e8c3b32edf5434bc2275fc9bab85f82640a19130"
+
+
+class EmbeddingGemmaProvider(SentenceTransformerEmbeddingProvider):
+    """Optional gated provider backed by Google's EmbeddingGemma model."""
+
+    model_name = "google/embeddinggemma-300M"
+    revision_environment_variable = "POPSIGN_EMBEDDING_MODEL_REVISION"
+    default_revision = None
 
 
 def build_embedding_provider(name: str | None = None) -> EmbeddingProvider:
     provider_name = (name or os.getenv("POPSIGN_EMBEDDING_PROVIDER", "hashing")).casefold()
     if provider_name in {"hash", "hashing", "demo"}:
         return HashingEmbeddingProvider()
+    if provider_name in {"mpnet", "all-mpnet-base-v2"}:
+        return MpnetEmbeddingProvider()
     if provider_name in {"gemma", "embeddinggemma"}:
         return EmbeddingGemmaProvider()
     raise ValueError(f"Unknown embedding provider: {provider_name}")

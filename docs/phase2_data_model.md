@@ -82,13 +82,16 @@ Generate production-oriented embeddings only after the base import succeeds:
 
 ```bash
 uv sync --extra ml --group dev
-export POPSIGN_EMBEDDING_MODEL_REVISION=<immutable-hugging-face-commit-sha>
 uv run python scripts/embed_context_bank.py \
-  --provider embeddinggemma \
+  --provider mpnet \
   --apply
 ```
 
-Embedding generation and upload are also batch-checkpointed. The upload command requires an immutable model revision. Model vectors cannot be mixed silently because the model name, revision, prompt template, dimensions, and source hash are part of the stored identity.
+Embedding generation and upload are also batch-checkpointed. MPNet uses the
+immutable revision recorded in Phase 3; EmbeddingGemma requires an explicitly
+pinned revision and gated-model credentials. Model vectors cannot be mixed
+silently because the model name, revision, prompt template, dimensions, and
+source hash are part of the stored identity.
 
 ## Remaining human inputs
 
@@ -102,5 +105,6 @@ Embedding generation and upload are also batch-checkpointed. The upload command 
 On 2026-10-17, the production migration and all nine base-data tables were
 loaded into `popsign-demo`. A database-side query matched all expected source,
 relationship, eligibility, and readiness counts. The result is recorded in
-`data/phase2_supabase_verification.json`. Embedding generation remains separate
-so a demo hashing model cannot be mistaken for the eventual production model.
+`data/phase2_supabase_verification.json`. Phase 3 subsequently loaded the
+separate, versioned semantic embedding tables without changing this base-data
+lineage; see `docs/phase3_embeddings.md`.

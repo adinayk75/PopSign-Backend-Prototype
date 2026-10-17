@@ -15,6 +15,7 @@ dependencies = [
 [project.optional-dependencies]
 ml = [
     "sentence-transformers>=5.1.2,<6",
+    "socksio>=1.0.0,<2",
 ]
 
 [dependency-groups]

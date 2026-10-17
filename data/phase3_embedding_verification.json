@@ -1,0 +1,35 @@
+{
+  "embedding_model": {
+    "dimensions": 768,
+    "id": "ab922308-695a-50c2-ad75-9f5bd7c163a9",
+    "lifecycle_status": "candidate",
+    "model_name": "sentence-transformers/all-mpnet-base-v2",
+    "model_revision": "e8c3b32edf5434bc2275fc9bab85f82640a19130",
+    "model_version": "hf-e8c3b32edf5434bc2275fc9bab85f82640a19130",
+    "normalized": true,
+    "prompt_template": "Meaning of \"{target_word}\" in this sentence: {context_text}",
+    "provider_kind": "sentence_transformers"
+  },
+  "generation": {
+    "batches": 12,
+    "private_exports_committed": false,
+    "rows": 11924,
+    "status": "completed"
+  },
+  "import_run_id": "1fe293ca-0f74-5811-8a87-fcc5e23f21ad",
+  "metrics": {
+    "distinct_source_hashes": 11924,
+    "distinct_word_phrases": 11924,
+    "embedding_models": 1,
+    "live_match_rows": 5,
+    "phrase_embeddings": 11924,
+    "top_match_similarity": 1.0,
+    "wrong_dimensions": 0
+  },
+  "phase": "embeddings_complete",
+  "project": "popsign-demo",
+  "schema_version": "2026-10-17.1",
+  "threshold_status": "not_tuned_candidate_model",
+  "verified_at": "2026-10-17T17:13:45Z",
+  "workbook_sha256": "77b843062e7151ab8c94a2449bdfd49c74b2c7c7c4b81fce655b0ec3f043b1a3"
+}
