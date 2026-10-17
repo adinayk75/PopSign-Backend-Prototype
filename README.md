@@ -38,19 +38,20 @@ The default `local` backend requires no keys or model download. It uses a determ
 
 ## Supabase setup
 
-1. Run [`supabase/migrations/202610030001_vector_store.sql`](supabase/migrations/202610030001_vector_store.sql) in the Supabase SQL Editor.
-2. Copy `.env.example` to `.env` and add the project URL and server-only secret key.
-3. Seed the pilot metadata and embeddings:
+The current migration and seeder belong to the local three-word prototype. **Do not run the pilot seeder against the real PopSign Supabase project.** Production setup is paused until the full-workbook schema and importer are completed.
 
-```bash
-uv run python scripts/seed_supabase.py --provider hashing
-```
+Phase 1 audited the complete source workbook rather than a small sample:
 
-4. Set `POPSIGN_DATA_BACKEND=supabase` in `.env` and restart the API.
+- 2,442 source rows
+- 1,748 unique words
+- 17,450 context-phrase assignments
+- 482 words with multiple video references
 
-See [`docs/supabase_setup.md`](docs/supabase_setup.md) for the safe step-by-step handoff.
+See [`docs/context_bank_audit.md`](docs/context_bank_audit.md) for the complete public-safe findings and [`docs/supabase_setup.md`](docs/supabase_setup.md) for the current connection status.
 
-## Optional EmbeddingGemma run
+## Optional local EmbeddingGemma demo
+
+This still uses the synthetic three-word catalog and must not point at the production Supabase project.
 
 ```bash
 uv sync --extra ml --group dev
@@ -79,16 +80,20 @@ The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/thr
 
 ```text
 data/pilot_catalog.json               reviewed-data staging format
+data/context_bank_audit.json          public-safe full-workbook audit metrics
 src/embeddings.py                     hashing + EmbeddingGemma providers
 src/vector_matcher.py                 cosine scoring and acceptance rule
 src/api.py                            FastAPI endpoints and static demo
-scripts/seed_supabase.py              versioned embedding importer
+scripts/seed_supabase.py              pilot-only versioned demo seeder
 scripts/evaluate_thresholds.py        repeatable threshold experiment
 supabase/migrations/...sql            pgvector schema and match RPC
 web/                                  Figma-inspired mobile test frontend
 tests/                                baseline, vector, API, and schema tests
+docs/context_bank_audit.md            Phase 1 production-data findings
 ```
 
 ## Important review boundary
 
 The committed catalog uses synthetic phrases and placeholder video paths so this public repository does not expose the private PopSign context bank. Every record remains marked `human_approved: false`. The software architecture is ready to test, but approved private labels and video mappings must be imported separately before production use.
+
+The synthetic catalog is retained only for local automated tests and UI demonstrations. It is not the planned content of the production Supabase database. The production importer will process every valid row in the full private workbook and store inactive or unresolved rows with explicit statuses rather than silently dropping them.

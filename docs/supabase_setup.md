@@ -1,21 +1,22 @@
-# Supabase Setup for the PopSign Demo
+# Supabase Setup Status
+
+> **Production hold:** Do not run `scripts/seed_supabase.py` against the real PopSign Supabase project. That command contains only the synthetic three-word prototype. The full-workbook audit is complete, but the production schema and complete importer belong to the next phases.
 
 ## Already completed in the dashboard
 
 - A Supabase project has been created.
 - The `vector` extension has been enabled.
 
-## Step 1: create the tables
+## Current project prerequisites
 
 1. Open the project in Supabase.
 2. Open **SQL Editor**.
 3. Create a new query.
-4. Copy all of `supabase/migrations/202610030001_vector_store.sql` into the editor.
-5. Click **Run** once.
+4. Wait for the production migration that follows the full-workbook audit before creating the final tables.
 
-The migration is repeatable. It creates five tables and one similarity-search function. It also enables Row Level Security and deliberately gives the browser no direct table access.
+The existing migration remains useful as prototype reference code, but it is not yet the approved full-data migration.
 
-## Step 2: configure the backend locally
+## Configure backend access when the production migration is ready
 
 From the repository:
 
@@ -32,9 +33,9 @@ SUPABASE_SECRET_KEY=<server-secret-key>
 
 Do not paste the secret key into chat, browser JavaScript, or GitHub. `.env` is ignored by Git.
 
-## Step 3: upload the pilot data and embeddings
+## Local prototype only
 
-For the immediate demo baseline:
+The following command prepares synthetic demo records. It must only be used for isolated local development, never for the real PopSign database:
 
 ```bash
 uv sync --group dev
@@ -49,7 +50,7 @@ Prepared 6 senses, 24 phrases, and 24 768-D embeddings.
 
 The importer is idempotent: rerunning it updates the same versioned rows instead of creating duplicates.
 
-## Step 4: make the API read from Supabase
+## Future production connection
 
 Change this line in `.env`:
 
@@ -57,7 +58,7 @@ Change this line in `.env`:
 POPSIGN_DATA_BACKEND=supabase
 ```
 
-Then run:
+After the full importer has populated the real project, run:
 
 ```bash
 uv run uvicorn src.api:app --reload
@@ -65,7 +66,9 @@ uv run uvicorn src.api:app --reload
 
 Open <http://127.0.0.1:8000>. The Generate Story screen should report `supabase · 768-D vectors`.
 
-## Optional: replace demo embeddings with EmbeddingGemma
+## Optional local demo: replace synthetic embeddings with EmbeddingGemma
+
+This command still uses the three-word prototype catalog. Do not configure it with the production Supabase credentials.
 
 ```bash
 uv sync --extra ml --group dev
