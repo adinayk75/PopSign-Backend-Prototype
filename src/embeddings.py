@@ -111,7 +111,7 @@ class EmbeddingGemmaProvider(EmbeddingProvider):
     """Optional production-oriented provider backed by EmbeddingGemma."""
 
     model_name = "google/embeddinggemma-300M"
-    model_version = "sentence-transformers-v1"
+    model_version = "unversioned"
 
     def __init__(self) -> None:
         try:
@@ -122,7 +122,12 @@ class EmbeddingGemmaProvider(EmbeddingProvider):
             ) from exc
 
         token = os.getenv("GEMMA_TOKEN") or os.getenv("HF_TOKEN")
-        self._model = SentenceTransformer(self.model_name, token=token, device="cpu")
+        revision = os.getenv("POPSIGN_EMBEDDING_MODEL_REVISION")
+        model_options = {"token": token, "device": "cpu"}
+        if revision:
+            model_options["revision"] = revision
+            self.model_version = f"hf-{revision}"
+        self._model = SentenceTransformer(self.model_name, **model_options)
 
     def embed(self, text: str, target_word: str | None = None) -> list[float]:
         prompt = text.strip()

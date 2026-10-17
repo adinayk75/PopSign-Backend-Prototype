@@ -65,6 +65,8 @@ class VectorMatchResult:
 class EvidenceSource(Protocol):
     review_notice: str
 
+    def words(self) -> list[str]: ...
+
     def search(
         self,
         target_word: str,
@@ -113,7 +115,8 @@ class LocalEvidenceSource:
 
 class SupabaseEvidenceSource:
     review_notice = (
-        "Database sense labels remain provisional until the PopSign ASL team approves them."
+        "Database sense labels and contexts remain provisional until the PopSign ASL "
+        "team approves them."
     )
 
     def __init__(self, url: str | None = None, secret_key: str | None = None) -> None:
@@ -127,6 +130,16 @@ class SupabaseEvidenceSource:
             )
         self.client = create_client(resolved_url, resolved_key)
 
+    def words(self) -> list[str]:
+        response = (
+            self.client.table("popsign_word_match_readiness")
+            .select("word_key")
+            .eq("matching_ready", True)
+            .order("word_key")
+            .execute()
+        )
+        return [str(row["word_key"]) for row in (response.data or [])]
+
     def search(
         self,
         target_word: str,
@@ -134,7 +147,7 @@ class SupabaseEvidenceSource:
         provider: EmbeddingProvider,
     ) -> list[ContextEvidence]:
         response = self.client.rpc(
-            "match_context_phrases",
+            "popsign_match_context_phrases",
             {
                 "p_target_word": target_word.casefold().strip(),
                 "p_query_embedding": query_embedding,

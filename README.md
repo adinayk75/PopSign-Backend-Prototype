@@ -1,6 +1,6 @@
 # PopSign Backend Prototype
 
-A testable prototype for choosing the correct ASL video when a generated story contains a word with multiple meanings.
+A testable backend for storing the complete PopSign context bank and choosing the correct ASL video when a generated story contains a word with multiple meanings.
 
 The current pilot demonstrates six provisional meanings across three words:
 
@@ -36,9 +36,9 @@ Open <http://127.0.0.1:8000>.
 
 The default `local` backend requires no keys or model download. It uses a deterministic 768-dimensional hashing baseline so the complete product flow can be demonstrated immediately. It is clearly separated from the optional EmbeddingGemma provider and should not be treated as the final semantic model.
 
-## Supabase setup
+## Production data status
 
-The current migration and seeder belong to the local three-word prototype. **Do not run the pilot seeder against the real PopSign Supabase project.** Production setup is paused until the full-workbook schema and importer are completed.
+Phase 2 now includes a production `popsign_*` Supabase schema plus idempotent, resumable importers for the complete private workbook and its word-specific embeddings. **Do not run the three-word pilot seeder against the real PopSign Supabase project.**
 
 Phase 1 audited the complete source workbook rather than a small sample:
 
@@ -48,6 +48,17 @@ Phase 1 audited the complete source workbook rather than a small sample:
 - 482 words with multiple video references
 
 See [`docs/context_bank_audit.md`](docs/context_bank_audit.md) for the complete public-safe findings and [`docs/supabase_setup.md`](docs/supabase_setup.md) for the current connection status.
+
+The verified production dry run prepares:
+
+- 2,442 source rows
+- 1,748 words
+- 2,436 sign variants
+- 5,838 unique phrases
+- 11,924 word-phrase embedding records
+- 17,450 variant-context assignments
+
+See [`docs/phase2_data_model.md`](docs/phase2_data_model.md) for the schema, safety rules, and import commands.
 
 ## Optional local EmbeddingGemma demo
 
@@ -81,19 +92,25 @@ The threshold script and [`notebooks/threshold_exploration.ipynb`](notebooks/thr
 ```text
 data/pilot_catalog.json               reviewed-data staging format
 data/context_bank_audit.json          public-safe full-workbook audit metrics
+src/context_bank.py                   full private-workbook transformer
+src/context_bank_embeddings.py        versioned, checkpointed embedding batches
+src/supabase_import.py                resumable deterministic Supabase upserts
 src/embeddings.py                     hashing + EmbeddingGemma providers
 src/vector_matcher.py                 cosine scoring and acceptance rule
 src/api.py                            FastAPI endpoints and static demo
 scripts/seed_supabase.py              pilot-only versioned demo seeder
+scripts/import_context_bank.py        complete base-data validator/importer
+scripts/embed_context_bank.py         complete embedding validator/importer
 scripts/evaluate_thresholds.py        repeatable threshold experiment
-supabase/migrations/...sql            pgvector schema and match RPC
+supabase/migrations/...sql            pilot and production pgvector schemas
 web/                                  Figma-inspired mobile test frontend
 tests/                                baseline, vector, API, and schema tests
 docs/context_bank_audit.md            Phase 1 production-data findings
+docs/phase2_data_model.md              Phase 2 production architecture
 ```
 
 ## Important review boundary
 
 The committed catalog uses synthetic phrases and placeholder video paths so this public repository does not expose the private PopSign context bank. Every record remains marked `human_approved: false`. The software architecture is ready to test, but approved private labels and video mappings must be imported separately before production use.
 
-The synthetic catalog is retained only for local automated tests and UI demonstrations. It is not the planned content of the production Supabase database. The production importer will process every valid row in the full private workbook and store inactive or unresolved rows with explicit statuses rather than silently dropping them.
+The synthetic catalog is retained only for local automated tests and UI demonstrations. It is not the content of the production Supabase database. The production importer processes every row in the full private workbook and stores inactive or unresolved rows with explicit statuses rather than silently dropping them.

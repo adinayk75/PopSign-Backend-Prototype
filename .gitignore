@@ -1,4 +1,5 @@
 .env
+.popsign-state/
 .venv/
 __pycache__/
 *.py[cod]

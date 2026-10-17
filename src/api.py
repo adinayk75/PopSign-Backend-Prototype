@@ -46,7 +46,7 @@ def get_matcher() -> VectorMatcher:
 def create_app() -> FastAPI:
     app = FastAPI(
         title="PopSign Vector Matching Prototype",
-        version="0.2.0",
+        version="0.3.0",
         description="Selects an ASL video meaning from phrase context.",
     )
 
@@ -71,8 +71,7 @@ def create_app() -> FastAPI:
     @app.get("/api/catalog/words")
     def catalog_words() -> dict:
         source = get_matcher().source
-        words = source.words() if isinstance(source, LocalEvidenceSource) else ["about", "can", "love"]
-        return {"words": words}
+        return {"words": source.words()}
 
     @app.post("/api/match")
     def match_phrase(request: MatchRequest) -> dict:
