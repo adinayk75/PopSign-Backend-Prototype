@@ -38,7 +38,7 @@ The default `local` backend requires no keys or model download. It uses a determ
 
 ## Production data status
 
-Phase 2 now includes a production `popsign_*` Supabase schema plus idempotent, resumable importers for the complete private workbook and its word-specific embeddings. **Do not run the three-word pilot seeder against the real PopSign Supabase project.**
+Phase 2 is deployed to the `popsign-demo` Supabase project. The production `popsign_*` schema and the complete private workbook base dataset were reconciled and imported on 2026-10-17. The schema also includes versioned storage and resumable import tooling for the later production embedding run. **Do not run the three-word pilot seeder against the real PopSign Supabase project.**
 
 Phase 1 audited the complete source workbook rather than a small sample:
 
@@ -57,6 +57,11 @@ The verified production dry run prepares:
 - 5,838 unique phrases
 - 11,924 word-phrase embedding records
 - 17,450 variant-context assignments
+
+Those same counts were verified inside Supabase after the live import. See
+[`data/phase2_supabase_verification.json`](data/phase2_supabase_verification.json)
+for the public-safe completion record. Production semantic embeddings are a
+later phase; no hashing-demo vectors were uploaded to the real project.
 
 See [`docs/phase2_data_model.md`](docs/phase2_data_model.md) for the schema, safety rules, and import commands.
 
@@ -100,6 +105,7 @@ src/vector_matcher.py                 cosine scoring and acceptance rule
 src/api.py                            FastAPI endpoints and static demo
 scripts/seed_supabase.py              pilot-only versioned demo seeder
 scripts/import_context_bank.py        complete base-data validator/importer
+scripts/export_context_bank_csv.py    private dashboard CSV fallback exporter
 scripts/embed_context_bank.py         complete embedding validator/importer
 scripts/evaluate_thresholds.py        repeatable threshold experiment
 supabase/migrations/...sql            pilot and production pgvector schemas

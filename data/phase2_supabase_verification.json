@@ -1,0 +1,26 @@
+{
+  "embedding_status": "not_started_production_model",
+  "import_run_id": "1fe293ca-0f74-5811-8a87-fcc5e23f21ad",
+  "import_status": "completed",
+  "metrics": {
+    "active_sign_variants": 2051,
+    "active_source_rows": 2052,
+    "blocked_shared_active_contexts": 7185,
+    "import_runs": 1,
+    "matching_eligible_contexts": 7619,
+    "phrases": 5838,
+    "sign_variants": 2436,
+    "source_rows": 2442,
+    "tags": 923,
+    "variant_contexts": 17450,
+    "variant_tags": 944,
+    "word_phrases": 11924,
+    "words": 1748,
+    "words_matching_ready": 712
+  },
+  "phase": "base_data_complete",
+  "project": "popsign-demo",
+  "schema_version": "2026-10-17.1",
+  "verified_at": "2026-10-17T07:34:03Z",
+  "workbook_sha256": "77b843062e7151ab8c94a2449bdfd49c74b2c7c7c4b81fce655b0ec3f043b1a3"
+}

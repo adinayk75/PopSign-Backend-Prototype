@@ -92,8 +92,15 @@ Embedding generation and upload are also batch-checkpointed. The upload command 
 
 ## Remaining human inputs
 
-- Restore or sign in to the Supabase project and apply the migration.
-- Keep the server secret only in the ignored local `.env` file.
+- Keep any future server secret only in the ignored local `.env` file.
 - Review sense labels, definitions, and contexts. The source definition column is empty.
 - Provide a hardware manifest that maps each canonical video key to an actual device and relative file path.
 - Build labeled evaluation cases before activating global or per-word thresholds.
+
+## Live completion
+
+On 2026-10-17, the production migration and all nine base-data tables were
+loaded into `popsign-demo`. A database-side query matched all expected source,
+relationship, eligibility, and readiness counts. The result is recorded in
+`data/phase2_supabase_verification.json`. Embedding generation remains separate
+so a demo hashing model cannot be mistaken for the eventual production model.

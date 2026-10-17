@@ -2,12 +2,20 @@
 
 > **Pilot warning:** Do not run `scripts/seed_supabase.py` against the real PopSign Supabase project. That command remains only for the synthetic three-word UI demo. Use the Phase 2 production migration and `scripts/import_context_bank.py` for the complete workbook.
 
-## Already completed in the dashboard
+## Live production status
 
-- A Supabase project has been created.
-- The `vector` extension has been enabled.
+- The `popsign-demo` project is healthy.
+- The `vector` and `pgcrypto` extensions are enabled.
+- `supabase/migrations/202610170002_production_context_bank.sql` was applied on 2026-10-17.
+- The complete workbook base dataset was imported; no reduced sample was used.
+- A database-side reconciliation returned `true` for all 14 expected-count checks.
+- The import run is marked `completed` with phase `base_data_complete`.
+- No hashing-demo vectors were uploaded to the production embedding tables.
 
-## Current project prerequisites
+The public-safe live verification record is in
+`data/phase2_supabase_verification.json`.
+
+## Rebuild the schema if a new project is created
 
 1. Open the project in Supabase.
 2. Open **SQL Editor**.
@@ -50,7 +58,7 @@ uv run python scripts/import_context_bank.py
 
 Expected headline counts are 2,442 source rows, 1,748 words, 2,436 variants, 17,450 context assignments, and 11,924 word-specific phrases. Supabase is not contacted unless `--apply` is present.
 
-## Import the complete database
+## Import the complete database through the backend
 
 After the production migration succeeds and the server credentials are configured:
 
@@ -59,6 +67,20 @@ uv run python scripts/import_context_bank.py --apply
 ```
 
 This imports every row, including removals, duplicates, missing contexts, and unresolved states. It resumes from `.popsign-state/` after an interruption and uses deterministic upserts instead of creating duplicate records.
+
+## Authenticated dashboard fallback
+
+If backend credentials are intentionally unavailable, generate private CSVs for
+the authenticated Supabase Table Editor:
+
+```bash
+uv run python scripts/export_context_bank_csv.py \
+  --workbook /absolute/path/to/context_bank.xlsx
+```
+
+The command reconciles the workbook first, then writes all nine table files and
+a resume manifest under ignored `.popsign-state/`. Import the files in the
+manifest's dependency order. Never commit or share the generated CSVs.
 
 ## Local prototype only
 
